@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    if(window.PaymentRequest) {
+      // Use Payment Request API
+      // Supported payment methods
+      const paymentMethods = [{
+        supportedMethods: 'basic-card',
+        data: {
+          supportedNetworks: [
+            'visa', 'mastercard', 'amex', 'discover',
+            'diners', 'jcb', 'unionpay'
+          ],
+          supportedTypes: ['credit', 'debit'],
+        }
+      }, {
+        supportedMethods: 'https://bobpay.xyz/pay',
+      }];
+
+      const paymentDetails = {
+        displayItems: [{
+          label: 'Anvil L/S Crew Neck - Grey M x1',
+          amount: { currency: 'USD', value: '22.15' }
+        }],
+        total: {
+          label: 'Total due',
+          amount: { currency: 'USD', value : '22.15' }
+        }
+      };
+
+      var paymentOptions = {
+        requestShipping: true,
+        requestPayerEmail: true,
+        requestPayerPhone: true,
+        requestPayerName: true,
+        shippingType: 'delivery'
+      };
+
+      var request = new PaymentRequest(paymentMethods, paymentDetails, paymentOptions);
+
+      request.show().then(response => {
+        // [process payment]
+        // send to a PSP etc.
+        response.complete('success');
+      });
+    } else {
+      // Fallback to traditional checkout
+      window.location.href = '/checkout/traditional';
+    }
+  </script>
+</body>
+</html>
